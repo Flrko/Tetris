@@ -17,6 +17,10 @@ public abstract class GridObject {
         this.x = x;
         this.y = y;
     }
+
+    public GridObject(int[] coords) {
+        
+    }
     
     public int getX() {
         return x;

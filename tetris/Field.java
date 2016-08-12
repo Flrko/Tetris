@@ -49,8 +49,8 @@ public class Field {
     
     int setNewBlock(List<Cell> cells) {
         for (Cell cell : cells) {
-            if (!checkPointOutOfBounds(point) || !checkPointCollision(point)) {
-                getGrid()[point.getX()][point.getY()] = 1;
+            if (!checkPointOutOfBounds(cell) || !checkPointCollision(cell)) {
+                getGrid()[cell.getX()][cell.getY()] = 1;
             }
         }
     }
