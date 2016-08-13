@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package tetris;
 
 /**
@@ -13,10 +9,10 @@ public class Cell extends GridObject {
     private int state;
     
     /**
-     * Значения клетки в сетке
+     * В«РЅР°С‡РµРЅРёВ¤ РєР»РµС‚РєРё РІ СЃРµС‚РєРµ
      */  
-    public final int GRID_TAKEN = 1; //Клетка занята
-    public final int GRID_BLANK = 0; //Клетка свободна
+    public final int GRID_TAKEN = 1; //В Р»РµС‚РєР° Р·Р°РЅВ¤С‚Р°
+    public final int GRID_BLANK = 0; //В Р»РµС‚РєР° СЃРІРѕР±РѕРґРЅР°
 
     public Cell(int x, int y) {
         super(x, y);

@@ -1,4 +1,4 @@
-/*
+п»ї/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -19,9 +19,9 @@ public class Field {
     
     
     /**
-     * Массив, описывающий игровую сетку.
-     * Индексы соответствуют координатам клетки.
-     * Значения соответствуют состоянию клетки.
+     * РњР°СЃСЃРёРІ, РѕРїРёСЃС‹РІР°СЋС‰РёР№ РёРіСЂРѕРІСѓСЋ СЃРµС‚РєСѓ.
+     * РРЅРґРµРєСЃС‹ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‚ РєРѕРѕСЂРґРёРЅР°С‚Р°Рј РєР»РµС‚РєРё.
+     * Р—РЅР°С‡РµРЅРёСЏ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‚ СЃРѕСЃС‚РѕСЏРЅРёСЋ РєР»РµС‚РєРё.
      */
     private int[][] grid;
     public int[][] getGrid() {
@@ -29,13 +29,13 @@ public class Field {
     }    
 
     /**
-     * Значения клетки в сетке
+     * Р—РЅР°С‡РµРЅРёСЏ РєР»РµС‚РєРё РІ СЃРµС‚РєРµ
      */    
-    public final int GRID_TAKEN = 1; //Клетка занята
-    public final int GRID_BLANK = 0; //Клетка свободна
+    public final int GRID_TAKEN = 1; //РљР»РµС‚РєР° Р·Р°РЅСЏС‚Р°
+    public final int GRID_BLANK = 0; //РљР»РµС‚РєР° СЃРІРѕР±РѕРґРЅР°
     
     /**
-     * Конструктор
+     * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
      * @param xLength
      * @param yLength 
      */
@@ -57,7 +57,7 @@ public class Field {
     
     
     /**
-     * Проверка точки на выход за границы сетки
+     * РџСЂРѕРІРµСЂРєР° С‚РѕС‡РєРё РЅР° РІС‹С…РѕРґ Р·Р° РіСЂР°РЅРёС†С‹ СЃРµС‚РєРё
      * @param checkingPoint
      * @return 
      */
@@ -69,7 +69,7 @@ public class Field {
     }
     
     /**
-     * Проверка 
+     * РџСЂРѕРІРµСЂРєР° 
      * @param checkingPoint
      * @return 
      */

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package tetris;
 
 import java.util.LinkedList;
@@ -14,9 +10,9 @@ import java.util.List;
  */
 public class Shape {
     private List<Cell> cellsList;
-    
-    
-    
+    private int x;
+    private int y;
+        
     public Shape() {
     }
     
@@ -25,7 +21,7 @@ public class Shape {
     }    
     
     /**
-     * Инициализация с использованием списка клеток.
+     * РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј СЃРїРёСЃРєР° РєР»РµС‚РѕРє.
      * @param cellsList 
      */
     public Shape(List<Cell> cellsList) {
@@ -33,7 +29,7 @@ public class Shape {
     }
 
     /**
-     * Инициализация с использованием двумерного массива с координатами клеток.
+     * РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј РґРІСѓРјРµСЂРЅРѕРіРѕ РјР°СЃСЃРёРІР° СЃ РєРѕРѕСЂРґРёРЅР°С‚Р°РјРё РєР»РµС‚РѕРє.
      * @param coords 
      */
     public Shape(int[][] coords) {
@@ -42,5 +38,31 @@ public class Shape {
             cellsList.add(new Cell(coord[0], coord[1]));
         }
     }
-        
+    
+    /**
+     * РџРѕРІРѕСЂРѕС‚ С„РёРіСѓСЂС‹ РІРїСЂР°РІРѕ.
+     */
+    public void rotateRight() {
+        for (Cell cell : cellsList) {            
+            int oldX = cell.getX();
+            cell.setX(cell.getY());
+            cell.setY(-oldX);
+        }
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
 }
