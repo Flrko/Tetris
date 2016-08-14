@@ -17,9 +17,18 @@ public class Cell extends GridObject {
     public Cell(int x, int y) {
         super(x, y);
     }
+    
+    public Cell() {
+        super();
+    }
 
     public int getState() {
         return state;
+    }
+    
+    public void setCoords(Point point) {
+        setX(point.getX());
+        setY(point.getY());
     }
         
 }
