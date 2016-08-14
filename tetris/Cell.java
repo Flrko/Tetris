@@ -1,6 +1,8 @@
 
 package tetris;
 
+import java.awt.Color;
+
 /**
  *
  * @author user
@@ -14,6 +16,12 @@ public class Cell extends GridObject {
     public final int GRID_TAKEN = 1; // летка зан¤та
     public final int GRID_BLANK = 0; // летка свободна
 
+    private Color color;
+
+    public Color getColor() {
+        return color;
+    }
+        
     public Cell(int x, int y) {
         super(x, y);
     }
@@ -29,6 +37,10 @@ public class Cell extends GridObject {
     public void setCoords(Point point) {
         setX(point.getX());
         setY(point.getY());
+    }
+    
+    public Point getPoint() {
+        return new Point(getX(), getY());
     }
         
 }

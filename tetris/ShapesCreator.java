@@ -10,8 +10,12 @@ import java.util.List;
  */
 public class ShapesCreator {
         
-    public Shape makeShape(ShapeSetup setup) {
-        return new Shape(setup.coordinates);
+    public Shape makeShape(ShapeSetup setup, int x, int y) {
+        List<Point> cellsMap = new LinkedList<>();
+        for (int[] i : setup.coordinates) {
+            cellsMap.add(new Point(i[0], i[1]));
+        }
+        return new Shape(cellsMap, x, y);
     }
 
     public ShapesCreator() {

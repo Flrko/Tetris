@@ -1,6 +1,7 @@
 
 package tetris;
 
+import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class Shape {
     
     private int x = 0;
     private int y = 0;
-
+        
     public List<Cell> getCellsList() {
         return cellsList;
     }    
