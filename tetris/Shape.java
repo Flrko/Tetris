@@ -5,64 +5,79 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
+ * Группа клеток (фигура)
  * @author user
  */
 public class Shape {
     private List<Cell> cellsList;
-    private int x;
-    private int y;
-        
-    public Shape() {
-    }
+    private List<Point> cellsMap;
     
+    private int x = 0;
+    private int y = 0;
+
     public List<Cell> getCellsList() {
         return cellsList;
     }    
-    
-    /**
-     * Инициализация с использованием списка клеток.
-     * @param cellsList 
-     */
-    public Shape(List<Cell> cellsList) {
-        this.cellsList = cellsList;
-    }
 
     /**
      * Инициализация с использованием двумерного массива с координатами клеток.
-     * @param coords 
+     * @param cellsMap относительные координаты клеток
+     * @param x координаты фигуры по оси X
+     * @param y координаты фигуры по оси Y
      */
-    public Shape(int[][] coords) {
+    public Shape(List<Point> cellsMap, int x, int y) {        
+        this.x = x;
+        this.y = y;        
+        this.cellsMap = cellsMap;        
+        
         cellsList = new LinkedList<>();
-        for (int[] coord : coords) {
-            cellsList.add(new Cell(coord[0], coord[1]));
+        for (int i = 0; i < cellsMap.size(); i++) {
+            cellsList.add(new Cell());
+        }
+        
+        updateCellsParams();        
+    }
+        
+    /**
+     * Поворот фигуры вправо
+     * @return фигура, повернутая вправо
+     */
+    public Shape rotateRight() {
+        List<Point> newCellsMap = new LinkedList<>();
+        for (int i = 0; i < getCellsAmmount(); i++) {
+            newCellsMap.add(i, new Point(cellsMap.get(i).getY(), -cellsMap.get(i).getX()));
+        }        
+        return new Shape(newCellsMap, getX(), getY());
+    }
+
+    /**
+     * Устанавливает параметры клеток в соответствии с текущим состоянием группы (фигуры).
+     */
+    private void updateCellsParams() {
+        for (int i = 0; i < getCellsAmmount(); i++) {
+            cellsList.get(i).setCoords(new Point(x + cellsMap.get(i).getX(), y + cellsMap.get(i).getY()));            
         }
     }
     
     /**
-     * Поворот фигуры вправо.
+     * Возвращает количество клеток в группе
+     * @return количество клеток
      */
-    public void rotateRight() {
-        for (Cell cell : cellsList) {            
-            int oldX = cell.getX();
-            cell.setX(cell.getY());
-            cell.setY(-oldX);
-        }
+    public int getCellsAmmount() {
+        return cellsMap.size();
     }
-
+    
+    public void setXY(int x, int y) {
+        this.x = x;
+        this.y = y;
+        
+    }
+    
     public int getX() {
         return x;
     }
 
     public int getY() {
         return y;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 }
