@@ -15,7 +15,9 @@ public class Shape {
     
     private int x = 0;
     private int y = 0;
-        
+    private Color color;    
+    
+    
     public List<Cell> getCellsList() {
         return cellsList;
     }    
@@ -25,11 +27,13 @@ public class Shape {
      * @param cellsMap относительные координаты клеток
      * @param x координаты фигуры по оси X
      * @param y координаты фигуры по оси Y
+     * @param color
      */
-    public Shape(List<Point> cellsMap, int x, int y) {        
+    public Shape(List<Point> cellsMap, int x, int y, Color color) {        
         this.x = x;
         this.y = y;        
-        this.cellsMap = cellsMap;        
+        this.cellsMap = cellsMap;
+        this.color = color;
         
         cellsList = new LinkedList<>();
         for (int i = 0; i < cellsMap.size(); i++) {
@@ -48,7 +52,7 @@ public class Shape {
         for (int i = 0; i < getCellsAmmount(); i++) {
             newCellsMap.add(i, new Point(cellsMap.get(i).getY(), -cellsMap.get(i).getX()));
         }        
-        return new Shape(newCellsMap, getX(), getY());
+        return new Shape(newCellsMap, getX(), getY(), getColor());
     }
 
     /**
@@ -56,7 +60,9 @@ public class Shape {
      */
     private void updateCellsParams() {
         for (int i = 0; i < getCellsAmmount(); i++) {
-            cellsList.get(i).setCoords(new Point(x + cellsMap.get(i).getX(), y + cellsMap.get(i).getY()));            
+            Cell updatingCell = cellsList.get(i);
+            updatingCell.setCoords(new Point(x + cellsMap.get(i).getX(), y + cellsMap.get(i).getY()));
+            updatingCell.setColor(color);
         }
     }
     
@@ -81,4 +87,21 @@ public class Shape {
     public int getY() {
         return y;
     }
+
+    public Color getColor() {
+        return color;
+    }
+        
+    @Override
+    public String toString() {
+        String retStr = "Shape{";
+        String cells = "";
+        
+        for (Cell cell : getCellsList()) {
+            cells += cell.toString() + " : ";
+        }
+                        
+        return retStr + cells + '}';
+    }
+        
 }

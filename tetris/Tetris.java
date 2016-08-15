@@ -12,7 +12,8 @@ public class Tetris {
      */
     public static void main(String[] args) {
         //ShapesCreator creator = new ShapesCreator();
-        drow();
+        //drow();
+        startTetris();
     }
     
     public static void drow() {
@@ -21,6 +22,11 @@ public class Tetris {
 //        Shape sh = creator.makeShape(ShapeSetup.Z_SHAPE, 10, 10);
 //        g.setTakenCells(sh.getCellsList());
 //        g.drowConsole();
+    }
+    
+    public static void startTetris() {
+        TetrisFrame tf = new TetrisFrame();
+        tf.setVisible(true);
     }
     
 }
