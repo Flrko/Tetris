@@ -23,7 +23,7 @@ public class Cell extends GridObject {
     }
         
     public Cell(int x, int y) {
-        super(x, y);
+        super(x, y);        
     }
     
     public Cell() {
@@ -39,8 +39,17 @@ public class Cell extends GridObject {
         setY(point.getY());
     }
     
+    public void setColor(Color color) {
+        this.color = color;
+    }
+    
     public Point getPoint() {
         return new Point(getX(), getY());
     }
-        
+
+    @Override
+    public String toString() {
+        //return "Cell{" + "state=" + state + ", GRID_TAKEN=" + GRID_TAKEN + ", GRID_BLANK=" + GRID_BLANK + ", color=" + color + '}';
+        return "Cell{" + "x = " + getX() + " y = " + getY() + " color = " + color + '}';
+    }       
 }
