@@ -16,11 +16,11 @@ public class Tetris {
     }
     
     public static void drow() {
-        Grid g = new Grid(20, 20);
-        ShapesCreator creator = new ShapesCreator();
-        Shape sh = creator.makeShape(ShapeSetup.Z_SHAPE, 10, 10);
-        g.setTakenCells(sh.getCellsList());
-        g.drowConsole();
+//        Grid g = new Grid(20, 20);
+//        ShapesCreator creator = new ShapesCreator();
+//        Shape sh = creator.makeShape(ShapeSetup.Z_SHAPE, 10, 10);
+//        g.setTakenCells(sh.getCellsList());
+//        g.drowConsole();
     }
     
 }
