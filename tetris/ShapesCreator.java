@@ -25,8 +25,9 @@ public class ShapesCreator {
         return new Shape(cellsMap, x, y, setColor);
     }
 
+      
     private Color defaultColor() {
-        return new Color(50, 20, 40);
+        return new Color(50, 150, 40);
     }
     
     public ShapesCreator() {

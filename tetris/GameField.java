@@ -19,20 +19,15 @@ public class GameField extends javax.swing.JPanel {
 
     private final static int FIELD_WIDTH = 20;
     private final static int FIELD_HEIGHT = 20;
-    
+    private final static Point spawnPoint = new Point(FIELD_WIDTH / 2, 0);
     private List<Cell> grid;
-//    private List<Cell> getGrid() {
-//        return grid;
-//    }
-    
-    private Shape droppingShape;
+    private Shape fallingShape;
     
     /**
      * Creates new form GameField
      */
     public GameField() {
-        
-        
+                
         initComponents();
         
         setFocusable(true);
@@ -41,13 +36,10 @@ public class GameField extends javax.swing.JPanel {
         grid = new ArrayList<>(gridLength);
         for (int i = 0; i < gridLength; i++) {
             grid.add(null);
-        }
-                
+        }                
         //~~
-        System.out.println("grid size = " + grid.size());
-        //~~//~~
-        
-        test();
+        System.out.println("Created grid with size = " + grid.size());
+        //~~~
     }
 
     /**
@@ -60,12 +52,10 @@ public class GameField extends javax.swing.JPanel {
         }
     }
     
-    private void addCell(Cell addCell) {
-        
+    private void addCell(Cell addCell) {        
         //~~
         System.out.println("Adding new cell to " + pointToIndex(addCell.getPoint()) + " index");
-        //~~~
-        
+        //~~~        
         grid.set(pointToIndex(addCell.getPoint()), addCell);
     }
     
@@ -74,13 +64,22 @@ public class GameField extends javax.swing.JPanel {
      * @param point координаты клетки
      * @return 
      */
-    private int pointToIndex(Point point) {        
+    private int pointToIndex(Point point) {
         return point.getY() * FIELD_WIDTH + point.getX();
     }
     
     
     private Cell cellAt(Point point) {
+        //~~
+        System.out.printf("Getting cell width coords (%d , %d)\n", point.getX(), point.getY());
+        //~~~        
         return grid.get(point.getY() * FIELD_WIDTH + point.getX());
+    }
+    
+    private void drawShape(Graphics g, Shape shape) {
+        for (Cell cell : shape.getCellsList()) {
+            drawCell(g, cell.getPoint(), cell.getColor());
+        }
     }
     
     /**
@@ -103,69 +102,98 @@ public class GameField extends javax.swing.JPanel {
         g.drawLine(x + cellWidth() - 1, y + cellHeight() - 1, x + cellWidth() - 1, y + 1);
     }
     
-    public void addShape(Shape shape) {
-        
+    /**
+     * Спавнит новую фигуру
+     * @param shape 
+     */
+    private void spawnShape(Shape shape) {
+        shape.setCoords(spawnPoint);
+        fallingShape = shape;
+    }
+    
+    /**
+     * Фиксирует группу клеток (фигуру) в сетке
+     * @param shape 
+     */
+    public void fixShape(Shape shape) {
         //~~
-        System.out.println(shape);        
+        System.out.println("Adding shape " + shape + " ...");
         //~~~
         
         List<Cell> cells = shape.getCellsList();
-        for (Cell cell : cells) {
-            
-            //~~
-            System.out.println("x!");
-            //~~~
-            
+        for (Cell cell : cells) {            
             if (!checkOutOfField(cell)) {
-                
-                //~~
-                System.out.println("y!");
-                //~~~
-                
                 addCell(cell);
+                //~~
+                System.out.println("Cell " + cell + " added!");
+                //~~~
             }
         }
     }
+
+    /**
+     * Проверка фигуры на выход за границы поля.
+     * @param shape
+     * @return true, если хотябы одна ячейка фигуры находится вне поля
+     */
+    private boolean checkOutOfField(Shape shape) {
+        for (Cell cell : shape.getCellsList()) {
+            if (checkOutOfField(cell)) {
+                return true;
+            }
+        }
+        return false;
+    }
     
-    
+    /**
+     * Проверка ячейки на выход за границы поля
+     * @param cell
+     * @return true, если точка находится за границей поля
+     */
     private boolean checkOutOfField(Cell cell) {
         return !(cell.getX() < FIELD_WIDTH && cell.getX() > 0 && cell.getY() > 0 && cell.getY() < FIELD_HEIGHT);
     }
+    
+    /**
+     * Проверка совпадения координат клеток фигуры с уже существующими в сетке
+     * @param shape
+     * @return true, если есть совпадение
+     */
+    private boolean checkCollision(Shape shape) {
+        for (Cell cell : shape.getCellsList()) {
+            if (checkCollision(cell)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Проверка совпадения координат клетки с уже существующими в сетке.
+     * @param cell
+     * @return true, если есть совпадение
+     */
+    private boolean checkCollision(Cell cell) {
+        return cellAt(cell.getPoint()) != null;
+    }
+    
+    
     
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         Dimension size = getSize();                                               //размер окна
         int boardTop = (int) size.getHeight() - FIELD_HEIGHT * cellHeight();      //
-
-//        for (int i = 0; i < FIELD_HEIGHT; i++) {
-//            for (int j = 0; j < FIELD_WIDTH; ++j) {
-//                //Shape shape = shapeAt(j, FIELD_HEIGHT - i - 1);
-//                Cell cell = cellAt(null);
-//                
-//                if (shape != Tetrominoes.NoShape) {
-//                    drawSquare(g, j * cellWidth(), boardTop + i * cellHeight(), shape);
-//                }
-//            }
-//        }
         
         for (Cell cell : grid) {
             if (cell != null) {
-                //~~
-                System.out.println("Drawing cell " + cell);
-                //~~~
-
                 drawCell(g, cell.getPoint(), cell.getColor());
             }
         }
 
-//        if (curPiece.getShape() != Tetrominoes.NoShape) {
-//            for (int i = 0; i < 4; ++i) {
-//                int x = curX + curPiece.x(i);
-//                int y = curY - curPiece.y(i);
-//                drawSquare(g, x * cellWidth(), boardTop + (FIELD_HEIGHT - y - 1) * cellHeight(), curPiece.getShape());
-//            }
-//        }
+        if (fallingShape != null) {
+            drawShape(g, fallingShape);
+        }
     }
     
     /**
@@ -183,12 +211,57 @@ public class GameField extends javax.swing.JPanel {
     public int cellHeight() {
         return (int) getSize().getHeight() / FIELD_HEIGHT;
     }
+        
     
+    private void moveFallingShape(int xShift, int yShift) {
+        Shape testShape = fallingShape.copy();
+        
+        //~~
+        System.out.println("old shape: " + fallingShape);
+        System.out.println("new shape: " + testShape);
+        //~~~
+        
+        testShape.shiftCoords(xShift, yShift);
+        if ( !checkCollision(testShape) && !checkOutOfField(testShape) ) {
+            //~~
+            System.out.println("YO!");
+            //~~~
+            fallingShape = testShape;
+        }
+    }
     
     public void test() {
         ShapesCreator creator = new ShapesCreator();
         Shape newShape = creator.makeShape(ShapeSetup.STICK_SHAPE, 5, 10, null);
-        addShape(newShape);
+        fixShape(newShape);
+        
+        spawnShape(creator.makeShape(ShapeSetup.CRANE_SHAPE, 0, 0, null));
+        
+        repaint();
+    }
+    
+    public void moveFallingShapeDown() {
+        moveFallingShape(0, 1);
+        repaint();
+    }
+    
+    public void moveFallingShapeRight() {
+        moveFallingShape(1, 0);
+        repaint();
+    }
+    
+    public void moveFallingShapeLeft() {
+        moveFallingShape(-1, 0);
+        repaint();
+    }
+    
+    
+    public void rotateFallingShape() {
+        Shape rotatedShape = fallingShape.rotateLeft();
+        if (!checkOutOfField(rotatedShape)) {
+            fallingShape = rotatedShape;
+        }
+        repaint();
     }
     
     /**
@@ -204,7 +277,7 @@ public class GameField extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 287, Short.MAX_VALUE)
+            .addGap(0, 413, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -44,10 +44,10 @@ public class Shape {
     }
         
     /**
-     * Поворот фигуры вправо
+     * Поворот фигуры влево
      * @return фигура, повернутая вправо
      */
-    public Shape rotateRight() {
+    public Shape rotateLeft() {
         List<Point> newCellsMap = new LinkedList<>();
         for (int i = 0; i < getCellsAmmount(); i++) {
             newCellsMap.add(i, new Point(cellsMap.get(i).getY(), -cellsMap.get(i).getX()));
@@ -67,6 +67,16 @@ public class Shape {
     }
     
     /**
+     * Устанавливает координаты каждой клетки в соответствии с параметрами группы (фигуры)
+     */
+    private void updateCoords() {
+        for (int i = 0; i < getCellsAmmount(); i++) {
+            Cell updatingCell = cellsList.get(i);
+            updatingCell.setCoords(new Point(x + cellsMap.get(i).getX(), y + cellsMap.get(i).getY()));            
+        }
+    }
+    
+    /**
      * Возвращает количество клеток в группе
      * @return количество клеток
      */
@@ -74,10 +84,24 @@ public class Shape {
         return cellsMap.size();
     }
     
-    public void setXY(int x, int y) {
-        this.x = x;
-        this.y = y;
-        
+    /**
+     * Создает копию объекта
+     * @return 
+     */
+    public Shape copy() {
+        return new Shape(cellsMap, x, y, color);
+    }
+    
+    public void setCoords(Point point) {
+        this.x = point.getX();
+        this.y = point.getY();
+        updateCoords();
+    }
+    
+    public void shiftCoords(int xShift, int yShift) {
+        x += xShift;
+        y += yShift;
+        updateCoords();
     }
     
     public int getX() {
