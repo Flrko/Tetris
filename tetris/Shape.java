@@ -71,8 +71,7 @@ public class Shape {
      */
     private void updateCoords() {
         for (int i = 0; i < getCellsAmmount(); i++) {
-            Cell updatingCell = cellsList.get(i);
-            updatingCell.setCoords(new Point(x + cellsMap.get(i).getX(), y + cellsMap.get(i).getY()));            
+            cellsList.get(i).setCoords(new Point(x + cellsMap.get(i).getX(), y + cellsMap.get(i).getY()));            
         }
     }
     

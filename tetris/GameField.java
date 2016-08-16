@@ -8,6 +8,10 @@ package tetris;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +19,19 @@ import java.util.List;
  *
  * @author One
  */
-public class GameField extends javax.swing.JPanel {
+public class GameField extends javax.swing.JPanel implements ActionListener {
 
+    public static final int UP = 0;
+    public static final int DOWN = 1;
+    public static final int LEFT = 2;
+    public static final int RIGHT = 3;
+    
     private final static int FIELD_WIDTH = 20;
     private final static int FIELD_HEIGHT = 20;
-    private final static Point spawnPoint = new Point(FIELD_WIDTH / 2, 0);
+    private final static Point spawnPoint = new Point(FIELD_WIDTH / 2, 3);
     private List<Cell> grid;
     private Shape fallingShape;
+    private ShapesCreator shapesCreator;
     
     /**
      * Creates new form GameField
@@ -36,10 +46,9 @@ public class GameField extends javax.swing.JPanel {
         grid = new ArrayList<>(gridLength);
         for (int i = 0; i < gridLength; i++) {
             grid.add(null);
-        }                
-        //~~
-        System.out.println("Created grid with size = " + grid.size());
-        //~~~
+        }        
+        addKeyListener(new TetrisKeyAdapter());
+        shapesCreator = new ShapesCreator();        
     }
 
     /**
@@ -73,7 +82,11 @@ public class GameField extends javax.swing.JPanel {
         //~~
         System.out.printf("Getting cell width coords (%d , %d)\n", point.getX(), point.getY());
         //~~~        
-        return grid.get(point.getY() * FIELD_WIDTH + point.getX());
+        
+        if (!checkOutOfField(point)) {
+            return grid.get(point.getY() * FIELD_WIDTH + point.getX());
+        }
+        return null;
     }
     
     private void drawShape(Graphics g, Shape shape) {
@@ -109,6 +122,11 @@ public class GameField extends javax.swing.JPanel {
     private void spawnShape(Shape shape) {
         shape.setCoords(spawnPoint);
         fallingShape = shape;
+    }
+    
+    private void spawnRandomShape() {
+        //shapesCreator.ma
+        spawnShape(fallingShape);
     }
     
     /**
@@ -147,11 +165,11 @@ public class GameField extends javax.swing.JPanel {
     
     /**
      * Проверка ячейки на выход за границы поля
-     * @param cell
+     * @param gridObject
      * @return true, если точка находится за границей поля
      */
-    private boolean checkOutOfField(Cell cell) {
-        return !(cell.getX() < FIELD_WIDTH && cell.getX() > 0 && cell.getY() > 0 && cell.getY() < FIELD_HEIGHT);
+    private boolean checkOutOfField(GridObject gridObject) {
+        return !(gridObject.getX() < FIELD_WIDTH && gridObject.getX() >= 0 && gridObject.getY() > 0 && gridObject.getY() < FIELD_HEIGHT);
     }
     
     /**
@@ -212,22 +230,21 @@ public class GameField extends javax.swing.JPanel {
         return (int) getSize().getHeight() / FIELD_HEIGHT;
     }
         
-    
-    private void moveFallingShape(int xShift, int yShift) {
-        Shape testShape = fallingShape.copy();
-        
-        //~~
-        System.out.println("old shape: " + fallingShape);
-        System.out.println("new shape: " + testShape);
-        //~~~
-        
+    /**
+     * Семещает координаты падающей фигуры
+     * @param xShift смещение по X
+     * @param yShift смещение по Y
+     * @return true, если перемещение удалось
+     */
+    private boolean moveFallingShape(int xShift, int yShift) {
+        Shape testShape = fallingShape.copy();                
         testShape.shiftCoords(xShift, yShift);
-        if ( !checkCollision(testShape) && !checkOutOfField(testShape) ) {
-            //~~
-            System.out.println("YO!");
-            //~~~
+        if ( !checkCollision(testShape) && !checkOutOfField(testShape) ) {            
             fallingShape = testShape;
+            repaint();
+            return true;
         }
+        return false;
     }
     
     public void test() {
@@ -240,28 +257,96 @@ public class GameField extends javax.swing.JPanel {
         repaint();
     }
     
-    public void moveFallingShapeDown() {
-        moveFallingShape(0, 1);
-        repaint();
+    /**
+     * Метод управления перемещением падающей фигуры
+     * @param action - команда
+     * @return true, если перемещение удалось
+     */
+    public boolean moveFallingShape(int action) {
+        switch (action) {
+            case DOWN : 
+                return GameField.this.moveFallingShape(0, 1);
+            case LEFT : 
+                return GameField.this.moveFallingShape(-1, 0);
+            case RIGHT : 
+                return GameField.this.moveFallingShape(1, 0);
+            case UP : 
+                return GameField.this.moveFallingShape(0, -1);
+        }
+        return false;
     }
     
-    public void moveFallingShapeRight() {
-        moveFallingShape(1, 0);
-        repaint();
-    }
-    
-    public void moveFallingShapeLeft() {
-        moveFallingShape(-1, 0);
-        repaint();
-    }
-    
-    
+    /**
+     * 
+     */
     public void rotateFallingShape() {
         Shape rotatedShape = fallingShape.rotateLeft();
-        if (!checkOutOfField(rotatedShape)) {
+        if (!checkOutOfField(rotatedShape) && !checkCollision(rotatedShape)) {
             fallingShape = rotatedShape;
         }
         repaint();
+    }
+    
+    private void fallShape() {
+        if (!moveFallingShape(DOWN)) {
+            fixShape(fallingShape);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    class TetrisKeyAdapter extends KeyAdapter {
+
+        @Override
+        public void keyPressed(KeyEvent ke) {
+            
+            //~~
+            System.out.println("Key pressed!");
+            //~~~
+            
+//            if (!isStarted || curPiece.getShape() == Tetrominoes.NoShape) {
+//                return;
+//            }
+
+            int keyCode = ke.getKeyCode();
+
+//            if (keyCode == 'p' || keyCode == 'P') {
+//                pause();
+//            }
+
+//            if (isPaused) {
+//                return;
+//            }
+
+            switch (keyCode) {
+                case KeyEvent.VK_LEFT:
+                    //~~
+                    System.out.println("LEFT");
+                    //~~~
+                    moveFallingShape(LEFT);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    moveFallingShape(RIGHT);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    moveFallingShape(DOWN);
+                    break;
+                case KeyEvent.VK_UP:
+                    rotateFallingShape();
+                    break;
+                case KeyEvent.VK_SPACE:
+                    //dropDown();
+                    break;
+                case 'd':
+                case 'D':
+                    //oneLineDown();
+                    break;
+            }
+
+        }
     }
     
     /**
