@@ -247,12 +247,11 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         return false;
     }
     
-    public void test() {
-        ShapesCreator creator = new ShapesCreator();
-        Shape newShape = creator.makeShape(ShapeSetup.STICK_SHAPE, 5, 10, null);
+    public void test() {        
+        Shape newShape = shapesCreator.makeShape(ShapeSetup.STICK_SHAPE, 5, 10, null);
         fixShape(newShape);
         
-        spawnShape(creator.makeShape(ShapeSetup.CRANE_SHAPE, 0, 0, null));
+        spawnShape(shapesCreator.makeRandomShape());
         
         repaint();
     }
