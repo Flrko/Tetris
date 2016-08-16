@@ -49,7 +49,7 @@ public class ShapesCreator {
     
     private ShapeSetup randomShapeSetup() {
         ShapeSetup[] setups = ShapeSetup.values();        
-        return setups[randomIndex(setups.length - 1)];
+        return setups[randomIndex(setups.length)];
     }
     
     private List<Point> generateCellsMap(ShapeSetup setup) {

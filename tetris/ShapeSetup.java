@@ -11,11 +11,13 @@ package tetris;
  */
 public enum ShapeSetup {
     Z_SHAPE (new int[][] {{-1,1} , {0,1} , {0,0} , {1,0}}),     
-    S_SHAPE (new int[][] {{-1,0} , {0,0} , {0,1} , {1,1}}),      //S
-    STICK_SHAPE (new int[][] {{-2,0} , {-1,0} , {0,0} , {1,0}}), //Палка
-    SQUARE_SHAPE (new int[][] {{0,1} , {1,1} , {0,0} , {1,0}}),  //Квадрат
-    CRANE_SHAPE (new int[][] {{1,1} , {0,1} , {0,0} , {0,-1}}),  //Г
-    POINT_SHAPE (new int[][] {{1,1}});  
+    S_SHAPE (new int[][] {{-1,0} , {0,0} , {0,1} , {1,1}}),
+    STICK_SHAPE (new int[][] {{-2,0} , {-1,0} , {0,0} , {1,0}}),
+    SQUARE_SHAPE (new int[][] {{0,1} , {1,1} , {0,0} , {1,0}}),
+    CRANE_SHAPE (new int[][] {{1,1} , {0,1} , {0,0} , {0,-1}}),
+    POINT_SHAPE (new int[][] {{0,0}}),
+    T_SHAPE (new int[][] {{-1,0} , {0,0} , {0,1} , {1,0}});
+    
     public int[][] coordinates;
     
     private ShapeSetup (int[][] coordinates) {

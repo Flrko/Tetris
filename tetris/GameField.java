@@ -122,11 +122,11 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
     private void spawnShape(Shape shape) {
         shape.setCoords(spawnPoint);
         fallingShape = shape;
+        repaint();
     }
     
-    private void spawnRandomShape() {
-        //shapesCreator.ma
-        spawnShape(fallingShape);
+    private void spawnRandomShape() {        
+        spawnShape(shapesCreator.makeRandomShape());
     }
     
     /**
@@ -248,12 +248,7 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
     }
     
     public void test() {        
-        Shape newShape = shapesCreator.makeShape(ShapeSetup.STICK_SHAPE, 5, 10, null);
-        fixShape(newShape);
-        
-        spawnShape(shapesCreator.makeRandomShape());
-        
-        repaint();
+        spawnRandomShape();
     }
     
     /**
@@ -289,6 +284,7 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
     private void fallShape() {
         if (!moveFallingShape(DOWN)) {
             fixShape(fallingShape);
+            spawnRandomShape();
         }
     }
 
@@ -331,7 +327,7 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
                     moveFallingShape(RIGHT);
                     break;
                 case KeyEvent.VK_DOWN:
-                    moveFallingShape(DOWN);
+                    fallShape();
                     break;
                 case KeyEvent.VK_UP:
                     rotateFallingShape();
