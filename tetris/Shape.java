@@ -75,6 +75,26 @@ public class Shape {
         }
     }
     
+    public int maxY() {
+        int maxY = Integer.MIN_VALUE;
+        for (Cell cell : cellsList) {
+            if (cell.getY() > maxY) {
+                maxY = cell.getY();
+            }
+        }
+        return maxY;
+    }
+    
+    public int minY() {
+        int minY = Integer.MAX_VALUE;
+        for (Cell cell : cellsList) {
+            if (cell.getY() < minY) {
+                minY = cell.getY();
+            }
+        }
+        return minY;
+    }
+    
     /**
      * Возвращает количество клеток в группе
      * @return количество клеток

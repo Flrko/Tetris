@@ -26,7 +26,7 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
     public static final int LEFT = 2;
     public static final int RIGHT = 3;
     
-    private final static int FIELD_WIDTH = 20;
+    private final static int FIELD_WIDTH = 10;
     private final static int FIELD_HEIGHT = 20;
     private final static Point spawnPoint = new Point(FIELD_WIDTH / 2, 3);
     private List<Cell> grid;
@@ -61,10 +61,7 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         }
     }
     
-    private void addCell(Cell addCell) {        
-        //~~
-        System.out.println("Adding new cell to " + pointToIndex(addCell.getPoint()) + " index");
-        //~~~        
+    private void addCell(Cell addCell) {      
         grid.set(pointToIndex(addCell.getPoint()), addCell);
     }
     
@@ -78,11 +75,7 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
     }
     
     
-    private Cell cellAt(Point point) {
-        //~~
-        System.out.printf("Getting cell width coords (%d , %d)\n", point.getX(), point.getY());
-        //~~~        
-        
+    private Cell cellAt(Point point) {        
         if (!checkOutOfField(point)) {
             return grid.get(point.getY() * FIELD_WIDTH + point.getX());
         }
@@ -142,9 +135,6 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         for (Cell cell : cells) {            
             if (!checkOutOfField(cell)) {
                 addCell(cell);
-                //~~
-                System.out.println("Cell " + cell + " added!");
-                //~~~
             }
         }
     }
@@ -195,8 +185,44 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         return cellAt(cell.getPoint()) != null;
     }
     
+    //TODO
+    private void checkLines (int fromY, int toY) {
+        //~~
+        System.out.println("Checking lines from " + fromY + " to " + toY);
+        //~~~
+        for (int y = fromY; y <= toY; y++) {
+            if (checkLineFilling(y)) {
+                //~~
+                System.out.println("Removing line with y = " + y );
+                //~~~                
+                for (int x = 0; x < FIELD_WIDTH; x++) {
+                    grid.set(pointToIndex(new Point(x, y)), null);
+                }
+            }
+        }
+        repaint();
+    }
     
+    /**
+     * Проверка линии на заполненность
+     * @param y местоположение линиии по оси Y
+     * @return true, если линия заполнена
+     */
+    private boolean checkLineFilling(int y) {
+        for (int x = 0; x < FIELD_WIDTH; x++) {
+            if (cellAt(new Point(x, y)) == null) {
+                return false;
+            }
+        }
+        return true;
+    }
     
+//    private void removeLine(int y) {
+//        for (int x = 0; x < FIELD_WIDTH; x++) {
+//            grid.set(pointToIndex(new Point(x, y)), null);
+//        }
+//    }
+        
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -251,6 +277,13 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         spawnRandomShape();
     }
     
+    //TODO
+    private void shiftLines(int y) {
+        for (int i = y - 1; i < 0; i++) {
+            
+        }
+    }
+    
     /**
      * Метод управления перемещением падающей фигуры
      * @param action - команда
@@ -284,6 +317,7 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
     private void fallShape() {
         if (!moveFallingShape(DOWN)) {
             fixShape(fallingShape);
+            checkLines(fallingShape.minY(), fallingShape.maxY());
             spawnRandomShape();
         }
     }
@@ -297,11 +331,6 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
 
         @Override
         public void keyPressed(KeyEvent ke) {
-            
-            //~~
-            System.out.println("Key pressed!");
-            //~~~
-            
 //            if (!isStarted || curPiece.getShape() == Tetrominoes.NoShape) {
 //                return;
 //            }
@@ -318,9 +347,6 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
 
             switch (keyCode) {
                 case KeyEvent.VK_LEFT:
-                    //~~
-                    System.out.println("LEFT");
-                    //~~~
                     moveFallingShape(LEFT);
                     break;
                 case KeyEvent.VK_RIGHT:
