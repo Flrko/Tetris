@@ -6,10 +6,12 @@
 package tetris;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import javax.swing.JLabel;
 
 /**
- *
+ * Окно с игровым полем
  * @author One
  */
 public class TetrisFrame extends javax.swing.JFrame {
@@ -19,23 +21,34 @@ public class TetrisFrame extends javax.swing.JFrame {
     /**
      * Creates new form TetrisFrame
      */
-    public TetrisFrame() {        
-                
-        initComponents();
-        
+    public TetrisFrame() {                
+        initComponents();        
         field = new GameField(this);        
-        //add(field, BorderLayout.CENTER);
-        
         fieldPane.setLayout(new BorderLayout());
         fieldPane.add(field);
         pack();
-        
-        //~~
-        field.start();
+        toCenter();
     }
 
+    /**
+     * Выставляет положение окна в центре
+     */
+    private void toCenter() {
+        Toolkit kit = Toolkit.getDefaultToolkit();
+        Dimension screenSize = kit.getScreenSize();
+
+        Dimension dlgSize = getSize();
+
+        setLocation((screenSize.width - dlgSize.width) / 2,
+                (screenSize.height - dlgSize.height) / 2);
+    }
+    
     public JLabel getScoreBar() {
         return scoreBar;
+    }
+    
+    public void startGame() {
+        field.start();
     }
     
     /**

@@ -18,7 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.Timer;
 
 /**
- *
+ * Игровое поле
  * @author One
  */
 public class GameField extends javax.swing.JPanel implements ActionListener {
@@ -62,16 +62,6 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         isPaused = false;
         gameOver = false;
         timer = new Timer(400, this);
-    }
-
-    /**
-     * Добавление ячейки в сетку
-     * @param cells 
-     */
-    private void addCells(List<Cell> cells) {
-        for (Cell cell : cells) {
-            grid.add(pointToIndex(cell.getPoint()), cell);
-        }
     }
     
     private void addCell(Cell cell) {      
@@ -246,18 +236,12 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         }
         return true;
     }
-    
-//    private void removeLine(int y) {
-//        for (int x = 0; x < FIELD_WIDTH; x++) {
-//            grid.set(pointToIndex(new Point(x, y)), null);
-//        }
-//    }
         
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        Dimension size = getSize();                                               //размер окна
-        int boardTop = (int) size.getHeight() - FIELD_HEIGHT * cellHeight();      //
+        Dimension size = getSize();
+        int boardTop = (int) size.getHeight() - FIELD_HEIGHT * cellHeight();
         
         for (Cell cell : grid) {
             if (cell != null) {
@@ -341,10 +325,6 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
      * @param gapY местоположение разрыва по Y
      */
     private void coverGap(int gapY) {
-        //~~
-        System.out.printf("Covering gap in %d ...\n", gapY);
-        //~~~
-        
         for (int y = gapY - 1; y > 0; y--) {                    //идем по всем линиям выше пустой линии (gap)
             for (int x = 0; x < FIELD_WIDTH; x++) {             //идем по всем клеткам на линии, получая при этом координаты всех точек над разрывом
                 Cell shiftingCell = cellAt(new Point(x, y));    //берем клетку над гапом                
@@ -375,12 +355,9 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         }
         return false;
     }
-    
-    /**
-     * 
-     */
+        
     public void rotateFallingShape() {
-        Shape rotatedShape = fallingShape.rotateLeft();
+        Shape rotatedShape = fallingShape.rotate();
         if (!checkOutOfField(rotatedShape) && !checkCollision(rotatedShape)) {
             fallingShape = rotatedShape;
         }
@@ -409,16 +386,11 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
 
         @Override
         public void keyPressed(KeyEvent ke) {
-//            if (!isStarted || curPiece.getShape() == Tetrominoes.NoShape) {
-//                return;
-//            }
-
             if (gameOver) {
                 start();
                 return;
             }
-            
-            
+                        
             int keyCode = ke.getKeyCode();
 
             if (keyCode == 'p' || keyCode == 'P') {
@@ -441,14 +413,7 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
                     break;
                 case KeyEvent.VK_UP:
                     rotateFallingShape();
-                    break;
-                case KeyEvent.VK_SPACE:
-                    //dropDown();
-                    break;
-                case 'd':
-                case 'D':
-                    //oneLineDown();
-                    break;
+                    break;                
             }
 
         }

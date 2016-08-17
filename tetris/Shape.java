@@ -47,10 +47,10 @@ public class Shape {
      * Поворот фигуры влево
      * @return фигура, повернутая вправо
      */
-    public Shape rotateLeft() {
+    public Shape rotate() {
         List<Point> newCellsMap = new LinkedList<>();
         for (int i = 0; i < getCellsAmmount(); i++) {
-            newCellsMap.add(i, new Point(cellsMap.get(i).getY(), -cellsMap.get(i).getX()));
+            newCellsMap.add(i, new Point(-cellsMap.get(i).getY(), cellsMap.get(i).getX()));
         }        
         return new Shape(newCellsMap, getX(), getY(), getColor());
     }

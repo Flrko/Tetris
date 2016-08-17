@@ -4,18 +4,10 @@ package tetris;
 import java.awt.Color;
 
 /**
- *
+ * Клетка
  * @author user
  */
 public class Cell extends GridObject {    
-    private int state;
-    
-    /**
-     * «начени¤ клетки в сетке
-     */  
-    public final int GRID_TAKEN = 1; // летка зан¤та
-    public final int GRID_BLANK = 0; // летка свободна
-
     private Color color;
 
     public Color getColor() {
@@ -28,10 +20,6 @@ public class Cell extends GridObject {
     
     public Cell() {
         super();
-    }
-
-    public int getState() {
-        return state;
     }
     
     public void setCoords(Point point) {
@@ -48,8 +36,7 @@ public class Cell extends GridObject {
     }
 
     @Override
-    public String toString() {
-        //return "Cell{" + "state=" + state + ", GRID_TAKEN=" + GRID_TAKEN + ", GRID_BLANK=" + GRID_BLANK + ", color=" + color + '}';
+    public String toString() {        
         return "Cell{" + "x = " + getX() + " y = " + getY() + " color = " + color + '}';
     }       
 }

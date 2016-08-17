@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- *
+ * Фабрика фигур
  * @author user
  */
 public class ShapesCreator {
