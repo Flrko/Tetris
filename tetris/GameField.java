@@ -28,16 +28,18 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
     public static final int LEFT = 2;
     public static final int RIGHT = 3;
     
-    private final static int FIELD_WIDTH = 6;
+    private final static int FIELD_WIDTH = 10;
     private final static int FIELD_HEIGHT = 20;
     private final static Point spawnPoint = new Point(FIELD_WIDTH / 2, 1);
     private List<Cell> grid;
+    private int gridLength;
     private Shape fallingShape;
     private ShapesCreator shapesCreator;
     private int score = 0;
     private JLabel scoreBar;
     private Timer timer;
     private boolean isPaused;
+    private boolean gameOver;
     
     /**
      * Creates new form GameField
@@ -49,15 +51,16 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         
         setFocusable(true);
         
-        int gridLength = FIELD_WIDTH * FIELD_HEIGHT;
+        gridLength = FIELD_WIDTH * FIELD_HEIGHT;
         grid = new ArrayList<>(gridLength);
         for (int i = 0; i < gridLength; i++) {
-            grid.add(null);
-        }        
+            grid.add(i, null);
+        } 
         scoreBar = parent.getScoreBar();
         addKeyListener(new TetrisKeyAdapter());
         shapesCreator = new ShapesCreator();
         isPaused = false;
+        gameOver = false;
         timer = new Timer(400, this);
     }
 
@@ -124,6 +127,11 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
      */
     private void spawnShape(Shape shape) {
         shape.setCoords(spawnPoint);
+        if (checkCollision(shape)) {
+            pause();
+            gameOver = true;
+            scoreBar.setText("Game Over");
+        }
         fallingShape = shape;
         repaint();
     }
@@ -295,12 +303,23 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         return false;
     }
     
+    private void clearGrid() {
+        for (int i = 0; i < gridLength; i++) {
+            grid.set(i, null);
+        } 
+    }
+    
     /**
      * Запуск игры
      */
-    public void start() {        
-        timer.start();
+    public void start() {                        
+        clearGrid();
+        isPaused = false;
+        gameOver = false;
+        score = 0;
+        updateScore(0);
         spawnRandomShape();
+        timer.start();
     }
     
     /**
@@ -394,6 +413,12 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
 //                return;
 //            }
 
+            if (gameOver) {
+                start();
+                return;
+            }
+            
+            
             int keyCode = ke.getKeyCode();
 
             if (keyCode == 'p' || keyCode == 'P') {
@@ -442,11 +467,11 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 240, Short.MAX_VALUE)
+            .addGap(0, 153, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 347, Short.MAX_VALUE)
+            .addGap(0, 360, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
