@@ -14,6 +14,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JLabel;
 
 /**
  *
@@ -32,11 +33,14 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
     private List<Cell> grid;
     private Shape fallingShape;
     private ShapesCreator shapesCreator;
+    private int score = 0;
+    private JLabel scoreBar;
     
     /**
      * Creates new form GameField
+     * @param parent
      */
-    public GameField() {
+    public GameField(TetrisFrame parent) {
                 
         initComponents();
         
@@ -47,8 +51,9 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         for (int i = 0; i < gridLength; i++) {
             grid.add(null);
         }        
+        scoreBar = parent.getScoreBar();
         addKeyListener(new TetrisKeyAdapter());
-        shapesCreator = new ShapesCreator();        
+        shapesCreator = new ShapesCreator();
     }
 
     /**
@@ -181,8 +186,12 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         return cellAt(cell.getPoint()) != null;
     }
     
-    //TODO
-    private void checkLines (int minY, int maxY) {
+    /**
+     * Проверка линий в указанном промежутке на заполненность
+     * @param minY
+     * @param maxY 
+     */
+    private void checkFullLines (int minY, int maxY) {
         //~~
         System.out.println("Checking lines from " + minY + " to " + maxY);
         //~~~
@@ -195,6 +204,7 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
                     removeCell(new Point(x, y));
                 }
                 coverGap(y);
+                updateScore(1);
             }
         }
         repaint();
@@ -335,9 +345,14 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
     private void fallShape() {
         if (!moveFallingShape(DOWN)) {
             fixShape(fallingShape);
-            checkLines(fallingShape.minY(), fallingShape.maxY());
+            checkFullLines(fallingShape.minY(), fallingShape.maxY());
             spawnRandomShape();
         }
+    }
+    
+    private void updateScore (int value) {
+        score += value;
+        scoreBar.setText(String.valueOf(score));
     }
 
     @Override
