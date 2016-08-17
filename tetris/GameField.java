@@ -15,6 +15,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JLabel;
+import javax.swing.Timer;
 
 /**
  *
@@ -35,6 +36,8 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
     private ShapesCreator shapesCreator;
     private int score = 0;
     private JLabel scoreBar;
+    private Timer timer;
+    private boolean isPaused;
     
     /**
      * Creates new form GameField
@@ -54,6 +57,8 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         scoreBar = parent.getScoreBar();
         addKeyListener(new TetrisKeyAdapter());
         shapesCreator = new ShapesCreator();
+        isPaused = false;
+        timer = new Timer(400, this);
     }
 
     /**
@@ -290,11 +295,32 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         return false;
     }
     
-    public void test() {        
+    /**
+     * Запуск игры
+     */
+    public void start() {        
+        timer.start();
         spawnRandomShape();
     }
     
-    //TODO
+    /**
+     * Функция управления паузой
+     */
+    private void pause() {
+        if (isPaused) {
+            timer.start();
+            isPaused = false;
+            return;
+        }
+        
+        timer.stop();
+        isPaused = true;
+    }
+    
+    /**
+     * Заполняет разрыв
+     * @param gapY местоположение разрыва по Y
+     */
     private void coverGap(int gapY) {
         //~~
         System.out.printf("Covering gap in %d ...\n", gapY);
@@ -357,7 +383,7 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        fallShape();
     }
     
     class TetrisKeyAdapter extends KeyAdapter {
@@ -370,13 +396,13 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
 
             int keyCode = ke.getKeyCode();
 
-//            if (keyCode == 'p' || keyCode == 'P') {
-//                pause();
-//            }
+            if (keyCode == 'p' || keyCode == 'P') {
+                pause();
+            }
 
-//            if (isPaused) {
-//                return;
-//            }
+            if (isPaused) {
+                return;
+            }
 
             switch (keyCode) {
                 case KeyEvent.VK_LEFT:
