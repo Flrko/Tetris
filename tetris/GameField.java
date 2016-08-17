@@ -26,9 +26,9 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
     public static final int LEFT = 2;
     public static final int RIGHT = 3;
     
-    private final static int FIELD_WIDTH = 10;
+    private final static int FIELD_WIDTH = 6;
     private final static int FIELD_HEIGHT = 20;
-    private final static Point spawnPoint = new Point(FIELD_WIDTH / 2, 3);
+    private final static Point spawnPoint = new Point(FIELD_WIDTH / 2, 1);
     private List<Cell> grid;
     private Shape fallingShape;
     private ShapesCreator shapesCreator;
@@ -61,8 +61,8 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         }
     }
     
-    private void addCell(Cell addCell) {      
-        grid.set(pointToIndex(addCell.getPoint()), addCell);
+    private void addCell(Cell cell) {      
+        grid.set(pointToIndex(cell.getPoint()), cell);
     }
     
     /**
@@ -126,11 +126,7 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
      * Фиксирует группу клеток (фигуру) в сетке
      * @param shape 
      */
-    public void fixShape(Shape shape) {
-        //~~
-        System.out.println("Adding shape " + shape + " ...");
-        //~~~
-        
+    public void fixShape(Shape shape) {        
         List<Cell> cells = shape.getCellsList();
         for (Cell cell : cells) {            
             if (!checkOutOfField(cell)) {
@@ -186,21 +182,32 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
     }
     
     //TODO
-    private void checkLines (int fromY, int toY) {
+    private void checkLines (int minY, int maxY) {
         //~~
-        System.out.println("Checking lines from " + fromY + " to " + toY);
+        System.out.println("Checking lines from " + minY + " to " + maxY);
         //~~~
-        for (int y = fromY; y <= toY; y++) {
+        for (int y = minY; y <= maxY; y++) {
             if (checkLineFilling(y)) {
                 //~~
                 System.out.println("Removing line with y = " + y );
-                //~~~                
+                //~~~
                 for (int x = 0; x < FIELD_WIDTH; x++) {
-                    grid.set(pointToIndex(new Point(x, y)), null);
+                    removeCell(new Point(x, y));
                 }
+                coverGap(y);
             }
         }
         repaint();
+    }
+    
+    
+    
+    /**
+     * Удаляет точку в сетке
+     * @param point 
+     */
+    private void removeCell(Point point) {
+        grid.set(pointToIndex(point), null);
     }
     
     /**
@@ -278,9 +285,20 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
     }
     
     //TODO
-    private void shiftLines(int y) {
-        for (int i = y - 1; i < 0; i++) {
-            
+    private void coverGap(int gapY) {
+        //~~
+        System.out.printf("Covering gap in %d ...\n", gapY);
+        //~~~
+        
+        for (int y = gapY - 1; y > 0; y--) {                    //идем по всем линиям выше пустой линии (gap)
+            for (int x = 0; x < FIELD_WIDTH; x++) {             //идем по всем клеткам на линии, получая при этом координаты всех точек над разрывом
+                Cell shiftingCell = cellAt(new Point(x, y));    //берем клетку над гапом                
+                if (shiftingCell != null) {                     //если она заполнена то ...                    
+                    shiftingCell.setY(y + 1);                   //опускаем ее вниз на 1 клетку (y++)
+                    addCell(shiftingCell);                      //добавляем заново, но с новыми координатами
+                    removeCell(new Point(x, y));                //очищаем старое место
+                }
+            }
         }
     }
     
@@ -383,7 +401,7 @@ public class GameField extends javax.swing.JPanel implements ActionListener {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 413, Short.MAX_VALUE)
+            .addGap(0, 240, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

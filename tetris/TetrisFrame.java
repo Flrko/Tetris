@@ -59,7 +59,7 @@ public class TetrisFrame extends javax.swing.JFrame {
         fieldPane.setLayout(fieldPaneLayout);
         fieldPaneLayout.setHorizontalGroup(
             fieldPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 412, Short.MAX_VALUE)
+            .addGap(0, 266, Short.MAX_VALUE)
         );
         fieldPaneLayout.setVerticalGroup(
             fieldPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
